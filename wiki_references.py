@@ -66,7 +66,9 @@ def run(file):
     """
     with open(file, "r") as f:
         for line in f:
+            print("## %s ##" % line)
             save_reference_pages(line.strip())
+            print("")
 
 
 if __name__ == '__main__':
