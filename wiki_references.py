@@ -2,7 +2,6 @@ import os
 import wikipedia
 
 from download import get_data
-from tqdm import tqdm
 from wikipedia import DisambiguationError
 
 
@@ -47,11 +46,13 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
             for i, link in enumerate(links):
                 data, data_type = get_data(link)
                 print(link, data_type)
-                if data is not None:
+                if data_type is not None:
                     file_name = "%04d.%s" % (i, data_type)
                     file_path = os.path.join(sub_dir, file_name)
                     log.write("%s %s\n" % (file_name, link))
                     save_file(data, file_path, data_type)
+                else:
+                    log.write("Error:%s %s" % (data, link))
 
 
 save_reference_pages("Earth")

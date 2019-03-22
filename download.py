@@ -26,10 +26,10 @@ def get_data(url):
     url = preprocess_url(url)
 
     try:
-        web_page = requests.get(url, timeout=(5, None))
+        web_page = requests.get(url, timeout=(10, None))
         content_type = web_page.headers.get('content-type')
     except Exception:
-        return None, None
+        return "Timeout", None
 
     if content_type is None:
         content_type = ""
@@ -44,7 +44,7 @@ def get_data(url):
             data = u"\n".join(t.strip() for t in visible_texts if t.strip())
             return data, "txt"
 
-    return None, None
+    return str(web_page.status_code), None
 
 
 if __name__ == "__main__":
