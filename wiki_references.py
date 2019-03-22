@@ -1,7 +1,7 @@
-import download
 import os
 import wikipedia
 
+from download import get_data
 from tqdm import tqdm
 from wikipedia import DisambiguationError
 
@@ -21,9 +21,14 @@ def get_references(keyword, recurse=True):
         else:
             return {}
 
-def save_file(text, file):
-    with open(file, "w") as f:
-        f.write(text)
+
+def save_file(data, file_name, data_type):
+    if data_type == "pdf":
+        f = open(file_name, "wb")
+    else:
+        f = open(file_name, "w")
+    f.write(data)
+    f.close()
 
 
 def save_reference_pages(keyword, target_dir="wikipedia"):
@@ -32,13 +37,21 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
 
     for candidate in reference_links:
         sub_dir = os.path.join(target_dir, candidate)
+        log_file = os.path.join(sub_dir, "log.txt")
         links = reference_links[candidate]
-        
+
         if not os.path.exists(sub_dir):
             os.makedirs(sub_dir)
-        
-        for i, link in enumerate(links):
-            file = os.path.join(sub_dir, "%04d.txt" % i)
-            text = download.text_from_html(link)
-            save_file(text, file)
-            
+
+        with open(log_file, "w") as log:
+            for i, link in enumerate(links):
+                data, data_type = get_data(link)
+                print(link, data_type)
+                if data is not None:
+                    file_name = "%04d.%s" % (i, data_type)
+                    file_path = os.path.join(sub_dir, file_name)
+                    log.write("%s %s\n" % (file_name, link))
+                    save_file(data, file_path, data_type)
+
+
+save_reference_pages("Earth")
