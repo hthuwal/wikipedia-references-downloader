@@ -15,7 +15,16 @@ def tag_visible(element):
     return True
 
 
+def preprocess_url(url: str):
+    if "//arxiv.org/" in url:
+        url.replace("abs", "pdf")
+        url += ".pdf"
+    return url
+
+
 def get_data(url):
+    url = preprocess_url(url)
+
     try:
         web_page = requests.get(url, timeout=(5, None))
         content_type = web_page.headers.get('content-type')
