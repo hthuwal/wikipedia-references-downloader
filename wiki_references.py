@@ -1,7 +1,9 @@
+import click
 import os
 import wikipedia
 
 from download import get_data
+from tqdm import tqdm
 from wikipedia import DisambiguationError
 
 
@@ -34,7 +36,7 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
     reference_links = get_references(keyword)
     target_dir = os.path.join(target_dir, keyword)
 
-    for candidate in reference_links:
+    for candidate in tqdm(reference_links):
         sub_dir = os.path.join(target_dir, candidate)
         log_file = os.path.join(sub_dir, "log.txt")
         links = reference_links[candidate]
@@ -43,16 +45,29 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
             os.makedirs(sub_dir)
 
         with open(log_file, "w") as log:
-            for i, link in enumerate(links):
+            for i, link in tqdm(enumerate(links), total=len(links)):
                 data, data_type = get_data(link)
-                print(link, data_type)
+                # print(link, data_type)
                 if data_type is not None:
                     file_name = "%04d.%s" % (i, data_type)
                     file_path = os.path.join(sub_dir, file_name)
                     log.write("%s %s\n" % (file_name, link))
                     save_file(data, file_path, data_type)
                 else:
-                    log.write("Error:%s %s" % (data, link))
+                    log.write("Error:%s %s\n" % (data, link))
 
 
-save_reference_pages("Earth")
+@click.command()
+@click.argument('file', type=click.Path(exists=True))
+def run(file):
+    """
+    Download Reference Pages corresponding to wikipedia page
+    of each entity in FILE.
+    """
+    with open(file, "r") as f:
+        for line in f:
+            save_reference_pages(line.strip())
+
+
+if __name__ == '__main__':
+    run()
