@@ -61,8 +61,7 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
 @click.argument('file', type=click.Path(exists=True))
 def run(file):
     """
-    Download Reference Pages corresponding to wikipedia page
-    of each entity in FILE.
+    Download references from the wikipedia page of each keyword (one per line) in FILE.
     """
     with open(file, "r") as f:
         for line in f:
