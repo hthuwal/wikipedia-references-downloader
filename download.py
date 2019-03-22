@@ -17,7 +17,7 @@ def tag_visible(element):
 
 def preprocess_url(url: str):
     if "//arxiv.org/" in url:
-        url.replace("abs", "pdf")
+        url = url.replace("abs", "pdf")
         url += ".pdf"
     return url
 
