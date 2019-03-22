@@ -1,5 +1,10 @@
+import download
+import os
 import wikipedia
+
+from tqdm import tqdm
 from wikipedia import DisambiguationError
+
 
 def get_references(keyword, recurse=True):
     try:
