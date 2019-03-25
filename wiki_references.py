@@ -36,7 +36,7 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia"):
     reference_links = get_references(keyword)
     target_dir = os.path.join(target_dir, keyword)
 
-    for candidate in tqdm(reference_links):
+    for candidate in tqdm(reference_links, ascii=True):
         sub_dir = os.path.join(target_dir, candidate)
         log_file = os.path.join(sub_dir, "log.txt")
         links = reference_links[candidate]
@@ -48,7 +48,7 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia"):
             links = links[:threshold]
 
         with open(log_file, "w") as log:
-            for i, link in tqdm(enumerate(links), total=len(links)):
+            for i, link in tqdm(enumerate(links), total=len(links), ascii=True):
                 data, data_type = get_data(link)
                 # print(link, data_type)
                 if data_type is not None:
