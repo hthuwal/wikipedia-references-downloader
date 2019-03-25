@@ -32,7 +32,7 @@ def save_file(data, file_name, data_type):
     f.close()
 
 
-def save_reference_pages(keyword, target_dir="wikipedia"):
+def save_reference_pages(keyword, threshold=None, target_dir="wikipedia"):
     reference_links = get_references(keyword)
     target_dir = os.path.join(target_dir, keyword)
 
@@ -43,6 +43,9 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
 
         if not os.path.exists(sub_dir):
             os.makedirs(sub_dir)
+
+        if threshold:
+            links = links[:threshold]
 
         with open(log_file, "w") as log:
             for i, link in tqdm(enumerate(links), total=len(links)):
@@ -59,7 +62,8 @@ def save_reference_pages(keyword, target_dir="wikipedia"):
 
 @click.command()
 @click.argument('file', type=click.Path(exists=True))
-def run(file):
+@click.option('--threshold', '-t', default=None, type=int, help='Max Number of Referneces per page to be extracted.')
+def run(file, threshold):
     """
     Download references from the wikipedia page of each keyword (one per line) in FILE.
     """
@@ -67,7 +71,7 @@ def run(file):
         for line in f:
             line = line.strip()
             print("## %s ##" % line)
-            save_reference_pages(line)
+            save_reference_pages(line, threshold=threshold)
             print("")
 
 
