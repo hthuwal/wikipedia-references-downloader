@@ -41,7 +41,7 @@ def get_data(url):
             soup = BeautifulSoup(web_page.content, 'html.parser')
             texts = soup.findAll(text=True)
             visible_texts = filter(tag_visible, texts)
-            data = u"\n".join(t.strip() for t in visible_texts if t.strip())
+            data = u" ".join(t.strip(" ").strip("\t") for t in visible_texts if t.strip())
             return data, "txt"
 
     return str(web_page.status_code), None
