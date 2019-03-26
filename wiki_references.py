@@ -1,10 +1,28 @@
 import click
 import os
+import string
+import unicodedata
 import wikipedia
 
 from download import get_data
 from tqdm import tqdm
 from wikipedia import DisambiguationError
+
+valid_filename_chars = "-_.() %s%s" % (string.ascii_letters, string.digits)
+char_limit = 255
+
+
+def clean_filename(filename, whitelist=valid_filename_chars, replace=' '):
+    # keep only valid ascii chars
+    cleaned_filename = unicodedata.normalize('NFKD', filename).encode('ASCII', 'ignore').decode()
+
+    # keep only whitelisted chars
+    cleaned_filename = ''.join(c for c in cleaned_filename if c in whitelist)
+
+    # Truncate file names for windows
+    if len(cleaned_filename) > char_limit:
+        print("Warning, filename truncated because it was over {}. Filenames may no longer be unique".format(char_limit))
+    return cleaned_filename[:char_limit]
 
 
 def get_references(keyword, recurse=True):
@@ -42,7 +60,7 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume
     reference_links = get_references(keyword)
 
     for candidate in tqdm(reference_links, ascii=True):
-        sub_dir = os.path.join(target_dir, candidate)
+        sub_dir = os.path.join(target_dir, clean_filename(candidate))
         log_file = os.path.join(sub_dir, "log.txt")
         links = reference_links[candidate]
 
