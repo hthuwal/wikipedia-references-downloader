@@ -35,11 +35,11 @@ def save_file(data, file_name, data_type):
 
 
 def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume=False):
-    reference_links = get_references(keyword)
     target_dir = os.path.join(target_dir, keyword)
-
     if resume and os.path.exists(target_dir):
         return
+
+    reference_links = get_references(keyword)
 
     for candidate in tqdm(reference_links, ascii=True):
         sub_dir = os.path.join(target_dir, candidate)
