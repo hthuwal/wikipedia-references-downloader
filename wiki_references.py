@@ -61,26 +61,15 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume
 
     for candidate in tqdm(reference_links, ascii=True):
         sub_dir = os.path.join(target_dir, clean_filename(candidate))
-        log_file = os.path.join(sub_dir, "log.txt")
+        links_file = os.path.join(sub_dir, "references.txt")
         links = reference_links[candidate]
 
         if not os.path.exists(sub_dir):
             os.makedirs(sub_dir)
 
-        if threshold:
-            links = links[:threshold]
-
-        with open(log_file, "w") as log:
-            for i, link in tqdm(enumerate(links), total=len(links), ascii=True):
-                data, data_type = get_data(link)
-                # print(link, data_type)
-                if data_type is not None:
-                    file_name = "%04d.%s" % (i, data_type)
-                    file_path = os.path.join(sub_dir, file_name)
-                    log.write("%s %s\n" % (file_name, link))
-                    save_file(data, file_path, data_type)
-                else:
-                    log.write("Error:%s %s\n" % (data, link))
+        with open(links_file, "w") as file:
+            for link in links:
+                file.write(f"{link}\n")
 
 
 @click.command()
