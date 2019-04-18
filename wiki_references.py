@@ -4,7 +4,7 @@ import string
 import unicodedata
 import wikipedia
 
-from download import get_data
+from download import preprocess_url
 from tqdm import tqdm
 from wikipedia import DisambiguationError
 
@@ -58,9 +58,11 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume
         return
 
     reference_links = get_references(keyword)
-
-    for candidate in tqdm(reference_links, ascii=True):
-        sub_dir = os.path.join(target_dir, clean_filename(candidate))
+    for candidate in reference_links:
+        if(candidate == keyword):
+            sub_dir = target_dir
+        else:
+            sub_dir = os.path.join(target_dir, clean_filename(candidate))
         links_file = os.path.join(sub_dir, "references.txt")
         links = reference_links[candidate]
 
@@ -69,6 +71,7 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume
 
         with open(links_file, "w") as file:
             for link in links:
+                link = preprocess_url(link)
                 file.write(f"{link}\n")
 
 
@@ -81,11 +84,10 @@ def run(file, threshold, resume):
     Download references from the wikipedia page of each keyword (one per line) in FILE.
     """
     with open(file, "r") as f:
-        for line in f:
+        keywords = [line.strip() for line in f.readlines()]
+        for line in tqdm(keywords, ascii=True):
             line = line.strip()
-            print("## %s ##" % line)
             save_reference_pages(line, threshold=threshold, resume=resume)
-            print("")
 
 
 if __name__ == '__main__':
