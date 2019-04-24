@@ -66,6 +66,9 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume
         links_file = os.path.join(sub_dir, "references.txt")
         links = reference_links[candidate]
 
+        if threshold:
+            links = links[0:threshold]
+
         if not os.path.exists(sub_dir):
             os.makedirs(sub_dir)
 
