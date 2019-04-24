@@ -48,3 +48,6 @@ Options:
   ```
 
 - `references.txt` will contain link to the references mentioned in the wikipedia pages of parent folders wikipedia page.
+
+## Downloading the reference pages
+
