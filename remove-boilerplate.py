@@ -15,6 +15,8 @@ def clean(content):
 
 
 def write_to_file(file, content):
+    if not content:
+        return
     with open(file, "w") as f:
         f.write(content)
 
