@@ -1,15 +1,17 @@
-## Wikipedia References Extractor
+# Wikipedia References Extractor
 
 - Download references from the wikipedia page of each keyword (one per line) in FILE.
 - Incase no single page exists for the corresponding keyword.
     + keyword is searched on wikipedia.
     + references from the wikipedia pages of top 5 results are used.
 
-### Dependencies
+## Installing Dependencies
 
-```
-pip install -r requirements.txt
-```
+- aria2c
+- Installing python dependencies
+  ```
+  pip install -r requirements.txt
+  ```
 
 ## Extracting Links 
 
@@ -40,11 +42,9 @@ Options:
   ```
   wikipedia/
   ├── Speed
-  │   └── Speed
-  │       └── references.txt
+  │   └── references.txt
   └── Velocity
-      └── Velocity
-          └── references.txt
+      └── references.txt
   ```
 
 - `references.txt` will contain link to the references mentioned in the wikipedia pages of parent folders wikipedia page.
