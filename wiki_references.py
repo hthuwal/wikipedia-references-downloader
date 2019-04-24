@@ -81,7 +81,7 @@ def save_reference_pages(keyword, threshold=None, target_dir="wikipedia", resume
 @click.option('--resume', help='Continue from last run...', is_flag=True)
 def run(file, threshold, resume):
     """
-    Download references from the wikipedia page of each keyword (one per line) in FILE.
+    Extract links to references from the wikipedia page of each keyword (one per line) in FILE.
     """
     with open(file, "r") as f:
         keywords = [line.strip() for line in f.readlines()]
