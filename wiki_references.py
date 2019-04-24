@@ -4,7 +4,7 @@ import string
 import unicodedata
 import wikipedia
 
-from download import preprocess_url
+from utils import preprocess_url
 from tqdm import tqdm
 from wikipedia import DisambiguationError
 
