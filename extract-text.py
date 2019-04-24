@@ -59,6 +59,9 @@ def run(sdir):
                     content = extract_text_from_pdf(source_file).strip()
                     write_to_file(target_file, content)
 
+                elif file == "log.txt":
+                    shutil.copy(source_file, target_file)
+
 
 if __name__ == "__main__":
     run()
