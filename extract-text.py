@@ -1,7 +1,9 @@
+import click
 import justext
 import os
-import click
+import pdftotext
 import shutil
+
 from tqdm import tqdm
 
 
@@ -21,6 +23,12 @@ def write_to_file(file, content):
         f.write(content)
 
 
+def extract_text_from_pdf(source_file):
+    with open(source_file, "rb") as f:
+        pdf = pdftotext.PDF(f)
+        return "\n\n".join(pdf)
+
+
 @click.command()
 @click.argument('sdir', type=click.Path(exists=True))
 def run(sdir):
@@ -28,9 +36,9 @@ def run(sdir):
     Remove Boilerplate from raw html pages in the directory "SDIR"
     """
     for rdir, folders, files in os.walk(sdir):
-        if files and os.path.basename(rdir) != 'cleaned':
+        if files:
             print(rdir)
-            target_dir = os.path.join(rdir, "cleaned")
+            target_dir = os.path.join("cleaned", rdir)
 
             if os.path.exists(target_dir):
                 shutil.rmtree(target_dir)
@@ -38,15 +46,18 @@ def run(sdir):
 
             for file in tqdm(files, ascii=True):
                 name, ext = os.path.splitext(file)
+                source_file = os.path.join(rdir, file)
+                target_file = os.path.join(target_dir, name + ".txt")
 
                 if ext in ['.html', '.xml', '.xhtml', '.php']:
-                    source_file = os.path.join(rdir, file)
-                    target_file = os.path.join(target_dir, name + ".txt")
-
                     content = open(source_file, "rb").read()
                     content = content.decode(errors='ignore')
-                    cleaned_content = clean(content)
+                    cleaned_content = clean(content).strip()
                     write_to_file(target_file, cleaned_content)
+
+                elif ext == ".pdf":
+                    content = extract_text_from_pdf(source_file).strip()
+                    write_to_file(target_file, content)
 
 
 if __name__ == "__main__":
