@@ -1,5 +1,3 @@
-download_dir=$1
-
 # Function to extract the extension if exist
 # from a string
 # argument: string
@@ -81,6 +79,8 @@ function auto_extension()
 # folder
 function main()
 {
+	local download_dir=$1
+
 	num_file=0
 	find "$download_dir" -iname "*references.txt" | sort > "list_of_ref.txt"
 	while read file
