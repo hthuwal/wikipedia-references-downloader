@@ -88,8 +88,19 @@ function main()
 		num_file=$((num_file+1))
 		echo $num_file":" $file
 		download "$file"
-		auto_extension "$(dirname "$file")"
+		
+		local dir=$(dirname "$file")
+		auto_extension "$dir" 
+
 		test $? -eq 7 && break
+
+		local tdir="completed/$dir"
+		if [ ! -d "$tdir" ]; then
+			mkdir -p "$tdir"
+		fi
+
+		echo "Moving Downloads to a safe location.."
+		mv "$dir" "$tdir"
 	done < "list_of_ref.txt"
 
 	rm "list_of_ref.txt"
